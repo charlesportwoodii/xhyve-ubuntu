@@ -10,10 +10,9 @@ $ brew update
 $ brew install --HEAD xhyve
 ```
 
-2. Run `./build.sh`, and go through the normal Ubuntu installation process. Make sure you install GRUB to the MBR.
+2. Run `make build`, and go through the normal Ubuntu installation process. Make sure you install GRUB to the MBR.
 ```
-$ chmod a+x build.sh
-$ ./build.sh
+$ make build
 ```
 
 > Avoid resize your terminal while you're going through the installer.
@@ -61,6 +60,8 @@ echo "export TERM=xterm-256color" >> $HOME/.bashrc
 ```
 
 > Note that if the machine is booted headlessly you will need to SSH into the machine to access it.
+
+3. If you want the VM to start on boot, you run `make install`, which will persist the disk image, and create a launchctl setting. Note that if launchctl is used, the image will be launched in headless mode, meaning that unless SSH is setup on the server you will not be able to access the tty.
 
 ## Maintenance
 

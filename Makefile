@@ -1,6 +1,7 @@
 SHELL := /bin/bash
 
-HD_SIZE=16
+HDD_SIZE=16
+HDD_IMG?=hdd.img
 
 # Remove the local build staging area
 clean:
@@ -8,8 +9,8 @@ clean:
 
 # Does the majority of the build process
 build: download_netboot create_disk_image
-	sudo xhyve -m 2G -c 1 -s 2:0,virtio-net \
-		-s 3,ahci-cd,mini.iso -s 4,virtio-blk,hdd.img \
+	xhyve -m 2G -c 1 -s 2:0,virtio-net \
+		-s 3,ahci-cd,mini.iso -s 4,virtio-blk,$(HDD_IMG) \
 		-s 0:0,hostbridge -s 31,lpc -l com1,stdio \
 		-f "kexec,linux,initrd.gz,earlyprintk=serial \
 		console=ttyS0 acpi=off root=/dev/vda1 ro"
@@ -22,16 +23,16 @@ download_netboot:
 
 # Creates a disk image with the requested size
 create_disk_image:
-	dd if=/dev/zero of=hdd.img bs=1g count=0 seek=$(HD_SIZE)
+	dd if=/dev/zero of=$(HDD_IMG) bs=1g count=0 seek=$(HDD_SIZE)
 
-# Installs the /boot and hdd.img files to persistent storage, then
+# Installs the /boot and $(HDD_IMG) files to persistent storage, then
 install: pre-install launchctl
 
 preinstall:
 	mkdir -p /Library/Containers/com.erianna.lxe/boot
 	cp -R ./boot/* /Library/Containers/com.erianna.lxe/boot/
 	cp ./boot.sh /Library/Containers/com.erianna.lxe
-	cp hdd.img /Library/Containers/com.erianna.lxe
+	cp $(HDD_IMG) /Library/Containers/com.erianna.lxe
 
 launchctl:
 	if [ -f /Library/LaunchDaemons/xhyve.lxe.erianna.com.plist ]; then  \
