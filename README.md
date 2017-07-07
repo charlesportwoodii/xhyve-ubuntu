@@ -25,7 +25,7 @@ $ /sbin/ip addr show enp0s2
 
 # Transfer the kernel and initrd files to the host
 # This command will wait for the host to recieve the files before completing
-tar cf - boot/initrd.img-* boot/vmlinuz-* | nc -l -p 1234
+tar cf - /target/boot/initrd.img-* boot/vmlinuz-* | nc -l -p 1234
 ```
 
 Open a new terminal window, then run the following command to recieve the files. Adjust `<ipaddress>` as necessary.

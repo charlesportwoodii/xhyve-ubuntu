@@ -2,6 +2,9 @@ SHELL := /bin/bash
 
 HDD_SIZE=16
 HDD_IMG?=hdd.img
+IDENTIFIER?=com.erianna.lxe
+PKG_NAME?=lxe.pkg
+VERSION?=0.1
 
 # Remove the local build staging area
 clean:
@@ -51,3 +54,13 @@ uninstall:
 	launchctl unload -w /Library/LaunchDaemons/xhyve.lxe.erianna.com.plist
 	rm -rf /Library/LaunchDaemons/xhyve.lxe.erianna.com.plist
 
+# Creates a package of the local image for distribution
+package:
+	mkdir -p ./ROOT/Library/Containers/com.erianna.lxe/ ./ROOT/usr/local/bin/
+	cp /usr/local/bin/lxe ./ROOT/usr/local/bin/
+	cp /usr/local/bin/xhyve ./ROOT/usr/local/bin/
+	cp -R ./boot ./ROOT/Library/Containers/com.erianna.lxe/
+	cp headless.sh ./ROOT/Library/Containers/com.erianna.lxe/
+	gzip -9 $(HDD_IMG)
+	mv $(HDD_IMG).gz ./ROOT/Library/Containers/com.erianna.lxe/
+	pkgbuild --root ./ROOT --identifier $(IDENTIFIER) --version $(VERSION) --scripts ./scripts/ $(PKG_NAME)
