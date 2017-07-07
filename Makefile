@@ -4,7 +4,7 @@ HD_SIZE=16
 
 # Remove the local build staging area
 clean:
-	rm -rf *.img mini.iso initrd.gz linux
+	rm -rf *.img mini.iso initrd.gz linux ./boot/*
 
 # Does the majority of the build process
 build: download_netboot create_disk_image
