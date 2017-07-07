@@ -65,3 +65,14 @@ echo "export TERM=xterm-256color" >> $HOME/.bashrc
 ## Maintenance
 
 When updating the kernel inside the VM, you'll need to copy the `initrd.img` and `vmlinuz` images back to the host. These files will be located in either `/` or `/boot`.
+
+## Stopping the VM.
+
+There are several different ways to shut down the vm.
+
+1. From the host, kill the `xhyve` process.
+```
+sudo kill $(ps aux | grep xhyve | grep root | head -n 1 | awk '{ print $2 }')
+```
+
+2. Shutdown the guest from within the guest.
