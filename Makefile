@@ -25,11 +25,21 @@ create_disk_image:
 	dd if=/dev/zero of=hdd.img bs=1g count=0 seek=$(HD_SIZE)
 
 # Installs the /boot and hdd.img files to persistent storage, then
-install:
+install: pre-install launchctl
+
+preinstall:
 	mkdir -p /Library/Containers/com.erianna.lxe/boot
 	cp -R ./boot/* /Library/Containers/com.erianna.lxe/boot/
 	cp ./boot.sh /Library/Containers/com.erianna.lxe
 	cp hdd.img /Library/Containers/com.erianna.lxe
+
+launchctl:
+	if [ -f /Library/LaunchDaemons/xhyve.lxe.erianna.com.plist ]; then  \
+		launchctl unload /Library/LaunchDaemons/xhyve.lxe.erianna.com.plist; \
+	fi
+	
+	cp ./headless.sh /Library/Containers/com.erianna.lxe
+	chmod a+x  /Library/Containers/com.erianna.lxe/headless.sh
 	cp xhyve.lxe.erianna.com.plist /Library/LaunchDaemons/
 	chown root /Library/LaunchDaemons/xhyve.lxe.erianna.com.plist
 	launchctl load /Library/LaunchDaemons/xhyve.lxe.erianna.com.plist
@@ -37,6 +47,6 @@ install:
 # Uninstalls the image
 uninstall:
 	rm -rf /Library/Containers/com.erianna.lxe/boot
-	launchctl unload /Library/LaunchDaemons/xhyve.lxe.erianna.com.plist
+	launchctl unload -w /Library/LaunchDaemons/xhyve.lxe.erianna.com.plist
 	rm -rf /Library/LaunchDaemons/xhyve.lxe.erianna.com.plist
 

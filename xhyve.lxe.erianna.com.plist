@@ -4,17 +4,20 @@
 <dict>
     <key>Label</key>
     <string>xhyve.lxe.erianna.com</string>
+    <key>EnvironmentVariables</key>
+    <dict>
+      <key>PATH</key>
+      <string>/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    </dict>
 	<key>WorkingDirectory</key>
 	<string>/Library/Containers/com.erianna.lxe/</string>
-    <key>ProgramArguments</key>
-    <array>
-		<string>./boot.sh headless</string>
-    </array>
+    <key>Program</key>
+	<string>/Library/Containers/com.erianna.lxe/headless.sh</string>
     <key>RunAtLoad</key>
     <true/>
 	<key>StandardErrorPath</key>
-	<string>>/Library/Containers/com.erianna.lxe/xhyve.lxe.erianna.com.error.log</string>
+	<string>/Library/Containers/com.erianna.lxe/xhyve.lxe.erianna.com.error.log</string>
 	<key>StandardOutPath</key>
-	<string>>/Library/Containers/com.erianna.lxe/xhyve.lxe.erianna.com.out.log</string>
+	<string>/Library/Containers/com.erianna.lxe/xhyve.lxe.erianna.com.out.log</string>
 </dict>
 </plist>

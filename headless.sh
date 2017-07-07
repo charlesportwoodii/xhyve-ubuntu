@@ -20,5 +20,5 @@ if [ $PROCESS_COUNT -gt 1 ]; then
     echo "XHYVE VM is already running";
 else
     echo "Starting XHYVE VM"
-    screen -dmS lxe sudo ${PROGRAM} ${MEM} ${SMP} ${PCI_DEV} ${LPC_DEV} ${NET} ${IMG_HDD} -f "kexec,${KERNEL},${INITRD},${CMDLINE}"
+    ${PROGRAM} ${MEM} ${SMP} ${PCI_DEV} ${LPC_DEV} ${NET} ${IMG_HDD} -f "kexec,${KERNEL},${INITRD},${CMDLINE}"
 fi
