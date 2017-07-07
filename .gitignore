@@ -1,0 +1,5 @@
+/boot
+*.img
+/initrd.gz
+mini.iso
+/linux
