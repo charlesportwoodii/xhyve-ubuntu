@@ -43,6 +43,8 @@ $ chmod a+x ./boot.sh
 $ ./boot.sh
 ```
 
+The VM will be backgrounded via screen. To access it, run `screen -r` to re-attach the session.
+
 ## Post Installation
 
 Once you've booted into your VM, there's a few additional commands you can run to make life easier.
@@ -56,14 +58,6 @@ sudo apt-get install avahi-daemon
 ```
 sudo apt-get install -y xterm
 echo "export TERM=xterm-256color" >> $HOME/.bashrc
-```
-
-## Headless Boot
-
-The VM can be booted in headless mode by running the following command
-
-```
-$ ./boot.sh headless
 ```
 
 > Note that if the machine is booted headlessly you will need to SSH into the machine to access it.
