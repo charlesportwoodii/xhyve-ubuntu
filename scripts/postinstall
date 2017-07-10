@@ -1,0 +1,48 @@
+#!/bin/bash
+set -e
+
+IDENTIFIER="xhyve.lxe.erianna.com"
+echo "Extrating compressed image file"
+/usr/bin/gunzip --force /Library/Containers/com.erianna.lxe/hdd.img.gz
+
+if [ -f /Library/LaunchDaemons/xhyve.lxe.erianna.com.plist ]; then
+	echo "Unloading existing launchctl plist"
+	/bin/launchctl unload /Library/LaunchDaemons/xhyve.lxe.erianna.com.plist || true
+fi
+
+echo "Loading new launchctl plist"
+/bin/launchctl load /Library/LaunchDaemons/xhyve.lxe.erianna.com.plist || true
+
+STATUS=`/bin/launchctl list | /usr/bin/grep $IDENTIFIER | /usr/bin/awk '{print $3}'`
+
+if [ "$STATUS" = "$IDENTIFIER" ]; then
+	echo "Success: LaunchDaemon loaded."
+	PROCESS_COUNT=$(ps aux | grep -i /usr/local/bin/xhyve | wc -l)
+	if [ $PROCESS_COUNT -gt 1 ]; then
+		echo "XHYVE VM is already running";
+	else
+		echo "Starting XHYVE VM"
+		/Library/Containers/com.erianna.lxe/headless.sh true > /dev/null 2>&1 &
+	fi
+
+	echo "Waiting for VM to start..."
+	COUNTER=0
+	while true; do
+		sleep 1
+
+		COUNTER=$[COUNTER + 1]
+		if [ $COUNTER -gt 15 ]; then
+			echo "Waiting 15 seconds before trying to connect to host"
+			break;
+		fi
+	done
+
+	echo "Adding LXE configuration to local machine"
+	/usr/local/bin/lxc remote add lxe https://lxe.local:8443 --accept-certificate --password="lxe" || true
+	/usr/local/bin/lxc remote set-default lxe || true
+
+	exit 0
+else
+	echo "Error: LaunchDaemon not loaded."  
+	exit 1
+fi

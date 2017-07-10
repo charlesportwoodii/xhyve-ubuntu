@@ -32,35 +32,35 @@ create_disk_image:
 install: pre-install launchctl
 
 preinstall:
-	mkdir -p /Library/Containers/com.erianna.lxe/boot
-	cp -R ./boot/* /Library/Containers/com.erianna.lxe/boot/
-	cp ./boot.sh /Library/Containers/com.erianna.lxe
-	cp $(HDD_IMG) /Library/Containers/com.erianna.lxe
+	mkdir -p /Library/Containers/$(IDENTIFIER)/boot
+	cp -R ./boot/* /Library/Containers/$(IDENTIFIER)/boot/
+	cp ./boot.sh /Library/Containers/$(IDENTIFIER)
+	cp $(HDD_IMG) /Library/Containers/$(IDENTIFIER)
 
 launchctl:
 	if [ -f /Library/LaunchDaemons/xhyve.lxe.erianna.com.plist ]; then  \
 		launchctl unload /Library/LaunchDaemons/xhyve.lxe.erianna.com.plist; \
 	fi
 	
-	cp ./headless.sh /Library/Containers/com.erianna.lxe
-	chmod a+x  /Library/Containers/com.erianna.lxe/headless.sh
+	cp ./headless.sh /Library/Containers/$(IDENTIFIER)
+	chmod a+x  /Library/Containers/$(IDENTIFIER)/headless.sh
 	cp xhyve.lxe.erianna.com.plist /Library/LaunchDaemons/
 	chown root /Library/LaunchDaemons/xhyve.lxe.erianna.com.plist
 	launchctl load /Library/LaunchDaemons/xhyve.lxe.erianna.com.plist
 
 # Uninstalls the image
 uninstall:
-	rm -rf /Library/Containers/com.erianna.lxe/boot
+	rm -rf /Library/Containers/$(IDENTIFIER)/boot
 	launchctl unload -w /Library/LaunchDaemons/xhyve.lxe.erianna.com.plist
 	rm -rf /Library/LaunchDaemons/xhyve.lxe.erianna.com.plist
 
 # Creates a package of the local image for distribution
 package:
-	mkdir -p ./ROOT/Library/Containers/com.erianna.lxe/ ./ROOT/usr/local/bin/
+	mkdir -p ./ROOT/Library/Containers/$(IDENTIFIER)/ ./ROOT/usr/local/bin/
 	cp /usr/local/bin/lxe ./ROOT/usr/local/bin/
 	cp /usr/local/bin/xhyve ./ROOT/usr/local/bin/
-	cp -R ./boot ./ROOT/Library/Containers/com.erianna.lxe/
-	cp headless.sh ./ROOT/Library/Containers/com.erianna.lxe/
+	cp -R ./boot ./ROOT/Library/Containers/$(IDENTIFIER)/
+	cp headless.sh ./ROOT/Library/Containers/$(IDENTIFIER)/
 	gzip -9 $(HDD_IMG)
-	mv $(HDD_IMG).gz ./ROOT/Library/Containers/com.erianna.lxe/
+	mv $(HDD_IMG).gz ./ROOT/Library/Containers/$(IDENTIFIER)/
 	pkgbuild --root ./ROOT --identifier $(IDENTIFIER) --version $(VERSION) --scripts ./scripts/ $(PKG_NAME)

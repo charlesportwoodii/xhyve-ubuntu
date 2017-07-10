@@ -15,7 +15,7 @@ IMG_HDD="-s 4,virtio-blk,$(pwd)/hdd.img"
 PCI_DEV="-s 0:0,hostbridge -s 31,lpc"
 LPC_DEV="-l com1,stdio"
 
-PROCESS_COUNT=$(ps aux | grep -i xhyve | wc -l)
+PROCESS_COUNT=$(ps aux | grep -i /usr/local/bin/xhyve | wc -l)
 if [ $PROCESS_COUNT -gt 1 ]; then
     echo "XHYVE VM is already running";
 else

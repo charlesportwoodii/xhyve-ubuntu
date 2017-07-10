@@ -1,4 +1,5 @@
 /boot
+/ROOT
 *.img
 /initrd.gz
 mini.iso
